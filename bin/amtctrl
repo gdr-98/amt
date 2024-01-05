@@ -133,28 +133,37 @@ def main():
         host = server['host']
         passwd = server['passwd']
         vncpasswd = server['vncpasswd']
-        if len(sys.argv) > 2:
-            # Assegna il secondo argomento (presumibilmente il protocollo) a 'protocol'
-            protocol = sys.argv[2]
+        if len(sys.argv) > 3:
+            # Assegna il terzo argomento (presumibilmente il protocollo) a 'protocol'
+            protocol = sys.argv[3]
+            if protocol != 'http' or protocol != 'https':
+                print('Supported protocols are only http and https')
+                return 1
 
     client = amt.client.Client(host, passwd, protocol, vncpasswd=vncpasswd)
     try:
         if args.command == "on":
             if protocol == '':
-                print('Second argument protocol not specified')
+                print('Third argument protocol not specified')
+                return 1
             client.power_on()
         elif args.command == "off":
             if protocol == '':
-                print('Second argument protocol not specified')
+                print('Third argument protocol not specified')
+                return 1
             client.power_off()
         elif args.command == "reboot":
             if protocol == '':
-                print('Second argument protocol not specified')
+                print('Third argument protocol not specified')
+                return 1
             client.power_cycle()
         elif args.command == "pxeboot":
             client.pxe_next_boot()
             client.power_cycle()
         elif args.command == "status":
+            if protocol == '':
+                print('Third argument protocol not specified')
+                return 1
             print(amt.wsman.friendly_power_state(client.power_status()))
         elif args.command == "vnc":
             if client.enable_vnc():
