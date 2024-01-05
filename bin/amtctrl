@@ -112,6 +112,7 @@ def do_db_actions(args, db):
 def main():
     args = parse_args()
     db = amt.hostdb.HostDB()
+    protocol = ''
 
     # if the "server" name is reserve word, run that command
     if args.server in RESERVE_WORDS:
@@ -132,14 +133,23 @@ def main():
         host = server['host']
         passwd = server['passwd']
         vncpasswd = server['vncpasswd']
+        if len(sys.argv) > 2:
+            # Assegna il secondo argomento (presumibilmente il protocollo) a 'protocol'
+            protocol = sys.argv[2]
 
-    client = amt.client.Client(host, passwd, vncpasswd=vncpasswd)
+    client = amt.client.Client(host, passwd, protocol, vncpasswd=vncpasswd)
     try:
         if args.command == "on":
+            if protocol == '':
+                print('Second argument protocol not specified')
             client.power_on()
         elif args.command == "off":
+            if protocol == '':
+                print('Second argument protocol not specified')
             client.power_off()
         elif args.command == "reboot":
+            if protocol == '':
+                print('Second argument protocol not specified')
             client.power_cycle()
         elif args.command == "pxeboot":
             client.pxe_next_boot()

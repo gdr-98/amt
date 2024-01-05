@@ -11,6 +11,12 @@ Python AMT Tools
 
 Tools for interacting with Intel's Active Management Technology
 
+General info
+----------
+
+Just a simple fork to adapt the repo to my own purposes for amt new versions. 
+All credits to the original author. 
+
 Background
 ----------
 

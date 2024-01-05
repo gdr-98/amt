@@ -69,9 +69,7 @@ class Client(object):
 
     Manage interactions with AMT host.
     """
-    def __init__(self, address, password,
-                 username='admin', protocol='http',
-                 vncpasswd=None):
+    def __init__(self, address, password, protocol, username='admin', vncpasswd=None):
         port = AMT_PROTOCOL_PORT_MAP[protocol]
         path = '/wsman'
         self.uri = "%(protocol)s://%(address)s:%(port)s%(path)s" % {
@@ -88,7 +86,7 @@ class Client(object):
                              headers={'content-type':
                                       'application/soap+xml;charset=UTF-8'},
                              auth=HTTPDigestAuth(self.username, self.password),
-                             data=payload)
+                             data=payload, verify=False)
         resp.raise_for_status()
         if ns:
             rv = _return_value(resp.content, ns)
@@ -137,7 +135,7 @@ class Client(object):
             CIM_AssociatedPowerManagementService)
         resp = requests.post(self.uri,
                              auth=HTTPDigestAuth(self.username, self.password),
-                             data=payload)
+                             data=payload, verify=False)
         resp.raise_for_status()
         value = _find_value(
             resp.content,
@@ -146,14 +144,10 @@ class Client(object):
         return value
 
     def enable_vnc(self):
-        if self.vncpassword is None:
-            print("VNC Password was not set")
-            return False
-        payload = amt.wsman.enable_remote_kvm(self.uri, self.vncpassword)
+        payload = amt.wsman.enable_remote_kvm(self.uri, self.password)
         self.post(payload)
         payload = amt.wsman.kvm_redirect(self.uri)
         self.post(payload)
-        return True
 
     def vnc_status(self):
         payload = amt.wsman.get_request(
@@ -162,7 +156,7 @@ class Client(object):
              'IPS_KVMRedirectionSettingData'))
         resp = requests.post(self.uri,
                              auth=HTTPDigestAuth(self.username, self.password),
-                             data=payload)
+                             data=payload, verify=False)
         resp.raise_for_status()
         return pp_xml(resp.content)
 
