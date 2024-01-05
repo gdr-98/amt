@@ -137,7 +137,7 @@ def main():
             # Assegna il terzo argomento (presumibilmente il protocollo) a 'protocol'
             protocol = sys.argv[3]
             if protocol != 'http' and protocol != 'https':
-                print('Supported protocols are only http and https, not ' + protocol)
+                print('Supported protocols are only http and https')
                 return 1
 
     client = amt.client.Client(host, passwd, protocol, vncpasswd=vncpasswd)
