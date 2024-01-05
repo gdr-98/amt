@@ -34,7 +34,7 @@ amtctrl get <name> - return info for the server
 Control Commands
 ----------------
 
-amtctrl <name> <command> - run an amt command on the server
+amtctrl <name> <command> <protocol> - run an amt command on the server
 
 command is one of:
 
